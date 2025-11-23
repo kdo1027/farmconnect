@@ -1,4 +1,4 @@
-# FarmConnect Simplified - WhatsApp Chatbot for Low-Literacy Users
+# FarmConnect - WhatsApp Chatbot for Low-Literacy Users
 
 A simplified WhatsApp chatbot optimized for low-literacy agricultural workers to find farm jobs easily using minimal text and maximum visual cues.
 
