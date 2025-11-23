@@ -2,7 +2,7 @@
 
 A simplified WhatsApp chatbot optimized for low-literacy agricultural workers to find farm jobs easily using minimal text and maximum visual cues.
 
-## 🎯 Purpose
+## Purpose
 
 This is a simplified version of FarmConnect designed specifically for users with limited literacy skills. It uses:
 - **Minimal text** - Short, simple sentences
@@ -11,7 +11,7 @@ This is a simplified version of FarmConnect designed specifically for users with
 - **Step indicators** - Shows progress (Step 1/3, 2/3, etc.)
 - **Simple choices** - All multiple choice with numbers
 
-## 🆚 Differences from Text Version
+## Differences from Text Version
 
 | Feature | Main Bot | Simplified Bot |
 |---------|----------|----------------|
@@ -22,7 +22,7 @@ This is a simplified version of FarmConnect designed specifically for users with
 | **Registration** | Detailed questions | Simple questions with icons |
 | **Job display** | Full descriptions | Condensed with icons |
 
-## 📱 Emoji Legend
+## Emoji Legend
 
 ### User Types
 - 👷 **Worker** - Agricultural laborers looking for jobs
@@ -63,7 +63,7 @@ This is a simplified version of FarmConnect designed specifically for users with
 - 🪪 **ID** - Identification document
 - ❓ **Help** - Help or question
 
-## 🚀 Setup
+## Setup
 
 ### 1. Install Dependencies
 
@@ -273,7 +273,7 @@ Or send: menu
 ➡️ Send: 1 or 2
 ```
 
-## 🎨 Design Principles
+## Design Principles
 
 ### 1. Visual First
 Every concept uses an emoji or icon before text. Icons are universal and don't require reading skills.
@@ -351,7 +351,7 @@ open htmlcov/index.html
 
 For complete testing documentation, see **[TESTING_GUIDE.md](TESTING_GUIDE.md)**
 
-## 📂 File Structure
+## File Structure
 
 ```
 farmconnect/
@@ -361,7 +361,6 @@ farmconnect/
 ├── data_store.py               # JSON data storage
 ├── ai_matcher.py               # AI matching (optional)
 ├── requirements.txt            # Dependencies
-├── pytest.ini                  # Pytest configuration
 ├── .gitignore                  # Git ignore rules
 ├── .env                        # Environment variables (create this)
 ├── README.md                   # This file
@@ -382,7 +381,7 @@ farmconnect/
     └── matches.json
 ```
 
-## 💾 Data Storage
+## Data Storage
 
 Same as main bot - uses JSON files in `data/` directory:
 - **users.json** - User profiles
@@ -390,22 +389,20 @@ Same as main bot - uses JSON files in `data/` directory:
 - **conversations.json** - Current states
 - **matches.json** - Job applications
 
-## 🔧 Technical Details
+## Technical Details
 
 - **Language**: Python 3.7+
 - **Framework**: Flask
 - **WhatsApp Integration**: Twilio API
 - **Storage**: JSON files
-- **Port**: 3001 (different from main bot on 3000)
-- **Architecture**: Inherits from main FarmConnectBot class
 
-## 📝 Special Commands
+## Special Commands
 
 Type these anytime:
 - **menu** - Return to main menu
 - **help** - Get help
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Bot not responding
 - Check Flask server is running on port 3001
