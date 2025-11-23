@@ -28,7 +28,7 @@ class FarmConnectBot:
         """
         Main message handler - routes to appropriate flow based on user state
         """
-        
+
         user = self.store.get_user(from_number)
         conv_state = self.store.get_conversation_state(from_number)
 
@@ -40,9 +40,16 @@ class FarmConnectBot:
         if not user:
             return self.show_welcome_menu(from_number)
 
-        # Registered user - show main menu
+        # Registered user without conversation state - handle as menu selection or show menu
         if user.get('registered'):
-            return self.show_main_menu(from_number, user)
+            # If message is 'menu' or 'help', show appropriate response
+            if message_body.lower() == 'menu':
+                return self.show_main_menu(from_number, user)
+            elif message_body.lower() == 'help':
+                return self.show_help()
+            # Otherwise, treat as menu selection
+            else:
+                return self.handle_menu_selection(from_number, user, message_body)
 
         # User exists but not registered - continue registration
         return self.show_welcome_menu(from_number)
