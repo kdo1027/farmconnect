@@ -296,7 +296,7 @@ Show only what's needed at each step. Don't overwhelm with options.
 - X marks for errors (❌)
 - Progress indicators (📝 Step 1/3)
 
-## 🧪 Testing
+## Testing
 
 ### Unit Tests
 
