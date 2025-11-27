@@ -34,8 +34,9 @@ pytest tests/test_chatbot_simple.py
 | **test_data_store.py** | 27 tests | User management, job CRUD, conversation state, matching, data persistence |
 | **test_chatbot.py** | 29 tests | Registration flows, preferences, job posting, matching, menus, updates |
 | **test_chatbot_simple.py** | 9 tests | Simplified UI, emoji displays, low-literacy optimization, inheritance |
+| **test_multilingual.py** | 3 tests | English flow, Spanish flow, language switching, auto-detection |
 
-**Total**: 65 tests with 100% pass rate 
+**Total**: 68 tests with 100% pass rate 
 
 ### Running Individual Test Classes
 
@@ -86,6 +87,73 @@ pytest --cov=. --cov-report=term-missing
 
 ---
 
+## Multilingual Testing
+
+### Testing the Multilingual Bot
+
+FarmConnect includes multilingual support for **English and Spanish**. The multilingual bot runs on port 3001.
+
+#### Running Multilingual Tests
+
+```bash
+# Run multilingual tests
+pytest tests/test_multilingual.py -v
+
+# Or run the demo script
+python test_multilingual.py
+```
+
+**Expected output:**
+```
+TEST 1: ENGLISH CONVERSATION
+📱 User sends: Hello
+🤖 Bot: 🌾 *Welcome to FarmConnect!* 🌾...
+✅ English test complete!
+
+TEST 2: SPANISH CONVERSATION
+📱 User sends: Hola
+🤖 Bot: 🌾 *¡Bienvenido a FarmConnect!* 🌾...
+✅ Spanish test complete!
+
+TEST 3: LANGUAGE SWITCHING
+📱 User sends: español
+🤖 Bot (switched to Spanish): ✅ Idioma cambiado a Español...
+✅ Language switching test complete!
+
+✅ ALL TESTS PASSED!
+```
+
+#### Starting the Multilingual Bot
+
+```bash
+# Start multilingual bot (port 3002)
+python reply_whatsapp_multilingual.py
+```
+
+**Expected Output:**
+```
+🌾 FarmConnect Multilingual Bot Starting...
+🌍 Languages: English & Español
+🚀 Running on http://localhost:3002
+
+Webhook URL: http://your-ngrok-url/reply_whatsapp_multilingual
+
+Language Commands:
+  - Type 'español' to switch to Spanish
+  - Type 'english' to switch to English
+```
+
+#### Language Features Tested
+
+| Feature | How It Works | Test Coverage |
+|---------|--------------|---------------|
+| **Auto-detection** | Detects Spanish keywords (hola, trabajo, ayuda, etc.) | test_spanish_flow() |
+| **Manual switching** | Type `español` or `english` to switch anytime | test_language_switching() |
+| **Persistent preference** | Language choice saved in user profile | test_language_switching() |
+| **All translations** | Menus, prompts, errors all translated | All test functions |
+
+---
+
 ## Manual Testing via WhatsApp
 
 ### Quick Setup for Manual Testing
@@ -97,16 +165,20 @@ python sample-data/create_sample_jobs.py
 
 #### Step 2: Start the Bot
 ```bash
-python reply_whatsapp_simple.py
+python reply_whatsapp_multilingual.py
 ```
 
 **Expected Output:**
 ```
-🌾 FarmConnect Simplified Bot Starting...
-📱 Optimized for low-literacy users
+🌾 FarmConnect Multilingual Bot Starting...
+🌍 Languages: English & Español
 🚀 Running on http://localhost:3001
 
-Webhook URL: http://your-ngrok-url/reply_whatsapp_simple
+Webhook URL: http://your-ngrok-url/reply_whatsapp_multilingual
+
+Language Commands:
+  - Type 'español' to switch to Spanish
+  - Type 'english' to switch to English
 ```
 
 #### Step 3: Expose with ngrok (in a new terminal)
@@ -119,14 +191,14 @@ ngrok http 3001
 #### Step 4: Configure Twilio Webhook
 1. Go to: https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn
 2. Under "Sandbox Configuration"
-3. Set "When a message comes in" to: `https://YOUR_NGROK_URL/reply_whatsapp_simple`
+3. Set "When a message comes in" to: `https://YOUR_NGROK_URL/reply_whatsapp_multilingual`
 4. Click **Save**
 
 ---
 
 ## Manual Testing Scenarios
 
-### Test Scenario 1: New Farmer Registration (Standard Bot)
+### Test Scenario 1: New Farmer Registration (English)
 
 #### 1. Start Conversation
 **You send:** Any message (e.g., "Hi" or "Hello")
@@ -291,7 +363,184 @@ Reply with the job number (1-5) or type 'menu' to return to main menu.
 
 ---
 
-### Test Scenario 2: Select and Apply for a Job
+### Test Scenario 2: New Farmer Registration (Spanish)
+
+This scenario tests the **automatic Spanish language detection** and full Spanish conversation flow.
+
+#### 1. Start Conversation in Spanish
+**You send:** `Hola` (Spanish greeting triggers auto-detection)
+
+**Bot responds:**
+```
+🌾 *¡Bienvenido a FarmConnect!* 🌾
+
+Conectamos trabajadores agrícolas con empleadores de granjas.
+
+Por favor seleccione su función:
+1️⃣ Busco trabajo agrícola (Trabajador/Jornalero)
+2️⃣ Contrato trabajadores (Dueño de Granja)
+
+Responda con 1 o 2
+```
+
+#### 2. Select Trabajador (Farmer) Role
+**You send:** `1`
+
+**Bot responds:**
+```
+✅ ¡Excelente! Vamos a registrarlo.
+
+📝 *Paso 1 de 3: Información Personal*
+
+¿Cuál es su nombre completo?
+```
+
+#### 3. Enter Your Name
+**You send:** `Juan García` (or any name)
+
+**Bot responds:**
+```
+¡Mucho gusto, Juan García! 👋
+
+📍 *Paso 2 de 3: Ubicación*
+
+¿Cuál es su ubicación? (Ciudad o área donde busca trabajo)
+```
+
+#### 4. Enter Location
+**You send:** `Chapel Hill, NC`
+
+**Bot responds:**
+```
+📸 *Paso 3 de 3: Verificación de Identidad*
+
+Por favor suba una foto de su identificación o licencia de conducir.
+
+Esto nos ayuda a mantener FarmConnect seguro para todos.
+```
+
+#### 5. Upload ID Photo
+**You send:** Take/upload any photo
+
+**Bot responds:**
+```
+✅ ¡Identificación recibida! Gracias.
+
+Ahora configuremos sus preferencias de trabajo para encontrar las mejores opciones.
+
+🛠 *Preferencias de Tipo de Trabajo*
+¿Qué tipo de trabajo agrícola le interesa? (Seleccione todas las opciones)
+
+1️⃣ Cosecha
+2️⃣ Siembra
+3️⃣ Irrigación/Riego
+4️⃣ Cuidado de animales
+5️⃣ Trabajo general
+6️⃣ Todo tipo de trabajo
+
+Responda con números separados por comas (ej: 1,2,3) o solo un número:
+```
+
+#### 6. Set Work Type Preference
+**You send:** `6` (Todo tipo de trabajo)
+
+**Bot responds:**
+```
+📍 *Preferencia de Ubicación de Trabajo*
+
+¿Qué tan lejos está dispuesto a viajar para trabajar?
+
+1️⃣ Hasta 10 millas
+2️⃣ Hasta 25 millas
+3️⃣ Hasta 50 millas
+4️⃣ Cualquier distancia
+
+Responda con 1, 2, 3, o 4:
+```
+
+#### 7. Set Travel Distance
+**You send:** `3` (Hasta 50 millas)
+
+**Bot responds:**
+```
+⏰ *Preferencia de Horario de Trabajo*
+
+¿Cuál es su horario de trabajo preferido?
+
+1️⃣ Tiempo completo (40+ horas/semana)
+2️⃣ Medio tiempo (20-40 horas/semana)
+3️⃣ Flexible (tiempo completo o medio tiempo)
+
+Responda con 1, 2, o 3:
+```
+
+#### 8. Set Hours Preference
+**You send:** `3` (Flexible)
+
+**Bot responds with job recommendations in Spanish:**
+```
+✅ *¡Perfil Completo!*
+
+¡Encontramos 5 trabajo(s) que coinciden para usted!
+(Ordenados por mejor salario)
+
+━━━━━━━━━━━━━━━━━━━━
+
+*1. Equipment Maintenance*
+🏡 Taylor Agricultural Services
+💰 $22.0/hora
+📍 Pittsboro, NC
+⏰ full-time
+👥 1 trabajadores necesitados
+
+[... more jobs ...]
+
+━━━━━━━━━━━━━━━━━━━━
+
+*Seleccione un trabajo para ver detalles y aplicar:*
+
+Responda con el número del trabajo (1-5) o escriba 'menu' para volver al menú principal.
+```
+
+#### 9. Switch to English (Language Switching Test)
+**You send:** `english`
+
+**Bot responds:**
+```
+✅ Language changed to English
+
+🌾 *Farmer Menu*
+
+1️⃣ Browse available jobs
+2️⃣ Update my preferences
+3️⃣ View my job applications
+4️⃣ Chat with farm owner
+5️⃣ Help
+
+Reply with the number of your choice
+```
+
+#### 10. Switch Back to Spanish
+**You send:** `español`
+
+**Bot responds:**
+```
+✅ Idioma cambiado a Español
+
+🌾 *Menú de Trabajador*
+
+1️⃣ Ver trabajos disponibles
+2️⃣ Actualizar mis preferencias
+3️⃣ Ver mis solicitudes de trabajo
+4️⃣ Chat con dueño de granja
+5️⃣ Ayuda
+
+Responda con el número de su elección
+```
+
+---
+
+### Test Scenario 3: Select and Apply for a Job
 
 #### 9. Select a Job from the List
 **You send:** `3` (select Organic Vegetable Farming)
@@ -496,16 +745,17 @@ Matching workers will be notified!
 
 ## Testing Checklist
 
-### Automated Tests 
+### Automated Tests
 - [x] 27 DataStore tests (user, job, state, match management)
 - [x] 29 FarmConnectBot tests (registration, preferences, matching)
 - [x] 9 SimpleFarmConnectBot tests (simplified UI, emojis)
-- [x] All tests passing (65/65)
+- [x] 3 Multilingual tests (English flow, Spanish flow, language switching)
+- [x] All tests passing (68/68)
 - [x] Data persistence verified
 - [x] Edge cases handled
 
-### Manual WhatsApp Tests
-- [ ] New user welcome message appears
+### Manual WhatsApp Tests - English
+- [ ] New user welcome message appears (English)
 - [ ] Can select farmer role (1)
 - [ ] Can select farm owner role (2)
 - [ ] Farmer registration completes (name, location, ID)
@@ -527,14 +777,30 @@ Matching workers will be notified!
 - [ ] Owner can post jobs (8-step flow)
 - [ ] Job posting confirmation received
 
+### Manual WhatsApp Tests - Spanish
+- [ ] Spanish welcome appears when user sends "Hola"
+- [ ] Auto-detection works for Spanish keywords
+- [ ] Can complete registration in Spanish
+- [ ] Work type preferences show Spanish options
+- [ ] Distance preferences show Spanish text
+- [ ] Hours preferences show Spanish text
+- [ ] Job recommendations display in Spanish
+- [ ] Can switch to English with "english" command
+- [ ] Can switch to Spanish with "español" command
+- [ ] Language preference persists across sessions
+- [ ] All menus display correctly in Spanish
+- [ ] Help command shows Spanish text when in Spanish mode
+
 ---
 
 ## Common Test Commands
 
 | Command | What it does |
 |---------|-------------|
-| `menu` | Return to main menu from anywhere |
-| `help` | Show help message |
+| `menu` or `menú` | Return to main menu from anywhere |
+| `help` or `ayuda` | Show help message |
+| `english` | Switch to English language |
+| `español` or `spanish` | Switch to Spanish language |
 | `1`, `2`, `3`, etc. | Select menu options |
 | `1,2,3` | Select multiple work types |
 
@@ -623,7 +889,7 @@ pytest tests/test_data_store.py -v
 #### Bot doesn't respond
 1. **Check Flask server is running:**
    ```bash
-   python reply_whatsapp_simple.py
+   python reply_whatsapp_multilingual.py
    # Should show: Running on http://localhost:3001
    ```
 
@@ -636,11 +902,11 @@ pytest tests/test_data_store.py -v
 3. **Verify Twilio webhook:**
    - Go to Twilio console
    - Check webhook URL matches your ngrok URL
-   - URL should be: `https://your-ngrok-url/reply_whatsapp_simple`
+   - URL should be: `https://your-ngrok-url/reply_whatsapp_multilingual`
 
 4. **Check ngrok logs:**
    - ngrok terminal shows all incoming requests
-   - Look for POST requests to `/reply_whatsapp_simple`
+   - Look for POST requests to `/reply_whatsapp_multilingual`
    - Status should be 200, not 404
 
 #### No job recommendations
@@ -684,7 +950,7 @@ pytest tests/test_data_store.py -v
    Ctrl+C
 
    # Restart Flask
-   python reply_whatsapp_simple.py
+   python reply_whatsapp_multilingual.py
 
    # Restart ngrok (new terminal)
    ngrok http 3001

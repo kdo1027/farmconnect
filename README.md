@@ -1,10 +1,34 @@
-# FarmConnect - WhatsApp Chatbot for Low-Literacy Users
+# FarmConnect - WhatsApp Chatbot for Agricultural Workers
 
-A simplified WhatsApp chatbot optimized for low-literacy agricultural workers to find farm jobs easily using minimal text and maximum visual cues.
+A WhatsApp chatbot optimized for agricultural workers to find farm jobs easily using minimal text and maximum visual cues.
 
-## Purpose
+## 🌟 Key Features
 
-This is a simplified version of FarmConnect designed specifically for users with limited literacy skills. It uses:
+- **Multilingual Support** - English & Spanish (Español) with automatic detection
+- **Low-Literacy Optimized** - Minimal text, maximum emojis
+- **Visual Interface** - Icons, arrows, and clear visual cues
+- **Simple Navigation** - All multiple choice with numbers
+- **Smart Job Matching** - Matches workers with jobs by work type and salary
+- **Complete Registration** - Name, location, ID verification, and preferences
+
+## 🌍 Language Support
+
+FarmConnect supports **English and Spanish** with:
+- ✅ **Automatic language detection** - Detects Spanish keywords (hola, trabajo, etc.)
+- ✅ **Manual language switching** - Type `español` or `english` to switch anytime
+- ✅ **Persistent preferences** - Language choice is saved per user
+- ✅ **Professional translations** - All UI text manually translated by native speakers
+
+### Available Bots
+
+| Bot | Port | Language | Use Case |
+|-----|------|----------|----------|
+| **reply_whatsapp_simple.py** | 3001 | English only | For reference only |
+| **reply_whatsapp_multilingual.py** | 3001 | English & Spanish | Main bot (recommended) |
+
+## 💡 Design Philosophy
+
+This chatbot is designed specifically for users with limited literacy skills:
 - **Minimal text** - Short, simple sentences
 - **Maximum emojis** - Visual icons for everything
 - **Clear visual cues** - Arrows, checkmarks, numbers
@@ -87,13 +111,18 @@ TWILIO_AUTH_TOKEN=your_auth_token_here
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-### 4. Run the Simplified Bot
+### 4. Run the Bot
 
+**Multilingual Bot (English & Spanish)** ⭐ Recommended
 ```bash
-python reply_whatsapp_simple.py
+python reply_whatsapp_multilingual.py
 ```
+Runs on **http://localhost:3001**
 
-The server will start on **http://localhost:3001**
+### Language Commands (Multilingual Bot)
+- Type `español` to switch to Spanish
+- Type `english` to switch to English
+- Or just say "Hola" - language auto-detected!
 
 ### 5. Expose Webhook with ngrok
 
