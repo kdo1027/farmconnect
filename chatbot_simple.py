@@ -1,128 +1,110 @@
-"""
-FarmConnect WhatsApp Chatbot - Simplified Version
-Optimized for low-literacy users with minimal text and maximum emojis
-"""
 from chatbot import FarmConnectBot
 from typing import Optional
 
 class SimpleFarmConnectBot(FarmConnectBot):
-    """
-    Simplified version of FarmConnect bot for low-literacy users.
-    Uses minimal text, more emojis, and clear visual cues.
-    """
-
     def show_welcome_menu(self, from_number: str) -> str:
-        """Simple welcome with icons"""
         msg = """🌾 *FarmConnect* 🌾
 
-👤 Who are you?
+            👤 Who are you?
 
-1️⃣ 👷 Worker (Find Job)
-2️⃣ 🚜 Farm Owner (Hire)
+            1️⃣ 👷 Worker (Find Job)
+            2️⃣ 🚜 Farm Owner (Hire)
 
-➡️ Send: 1 or 2"""
+            ➡️ Send: 1 or 2"""
 
         self.store.set_conversation_state(from_number, 'awaiting_role_selection')
         return msg
 
     def show_farmer_menu(self, from_number: str) -> str:
-        """Simple farmer menu"""
         msg = """👷 *Worker Menu*
 
-1️⃣ 💼 Find Jobs
-2️⃣ ⚙️ My Preferences
-3️⃣ 📋 My Applications
-4️⃣ 💬 Message Owner
-5️⃣ ❓ Help
+            1️⃣ 💼 Find Jobs
+            2️⃣ ⚙️ My Preferences
+            3️⃣ 📋 My Applications
+            4️⃣ 💬 Message Owner
+            5️⃣ ❓ Help
 
-➡️ Send number"""
+            ➡️ Send number"""
 
         self.store.clear_conversation_state(from_number)
         return msg
 
     def show_owner_menu(self, from_number: str) -> str:
-        """Simple owner menu"""
         msg = """🚜 *Owner Menu*
 
-1️⃣ ➕ Post Job
-2️⃣ 📋 My Jobs
-3️⃣ 👥 Applicants
-4️⃣ 💬 Message Workers
-5️⃣ ❓ Help
+            1️⃣ ➕ Post Job
+            2️⃣ 📋 My Jobs
+            3️⃣ 👥 Applicants
+            4️⃣ 💬 Message Workers
+            5️⃣ ❓ Help
 
-➡️ Send number"""
+            ➡️ Send number"""
 
         self.store.clear_conversation_state(from_number)
         return msg
 
     def start_farmer_registration(self, from_number: str) -> str:
-        """Simplified registration start"""
         self.store.set_conversation_state(from_number, 'farmer_reg_name')
         return """✅ Welcome Worker!
 
-📝 Step 1/3
+                📝 Step 1/3
 
-👤 Your Name?
+                👤 Your Name?
 
-➡️ Send your name"""
+                ➡️ Send your name"""
 
     def handle_farmer_name(self, from_number: str, name: str) -> str:
-        """Simplified name confirmation"""
         self.store.update_user_profile(from_number, {'name': name})
         self.store.set_conversation_state(from_number, 'farmer_reg_location')
         return f"""👋 Hi {name}!
 
-📝 Step 2/3
+                📝 Step 2/3
 
-📍 Your City?
+                📍 Your City?
 
-➡️ Send your city"""
+                ➡️ Send your city"""
 
     def handle_farmer_location(self, from_number: str, location: str) -> str:
-        """Simplified location confirmation"""
         self.store.update_user_profile(from_number, {'location': location})
         self.store.set_conversation_state(from_number, 'farmer_reg_id')
         return """📝 Step 3/3
 
-📸 Send ID Photo
+                📸 Send ID Photo
 
-🪪 Take photo of:
-• Driver License
-• ID Card
+                🪪 Take photo of:
+                • Driver License
+                • ID Card
 
-➡️ Send photo now"""
+                ➡️ Send photo now"""
 
     def handle_farmer_id(self, from_number: str, media_url: Optional[str]) -> str:
-        """Simplified ID confirmation with preferences"""
         if not media_url:
             return """❌ No photo
 
-📸 Please send photo
+                    📸 Please send photo
 
-➡️ Take photo of ID"""
+                    ➡️ Take photo of ID"""
 
         self.store.update_user_profile(from_number, {'id_verified': True, 'id_photo_url': media_url})
         self.store.update_user(from_number, {'registered': True})
 
-        # Start preferences
         self.store.set_conversation_state(from_number, 'farmer_pref_work_type')
         return """✅ ID Received!
 
-⚙️ Job Preferences
+                ⚙️ Job Preferences
 
-🛠 What work?
+                🛠 What work?
 
-1️⃣ 🌾 Harvest
-2️⃣ 🌱 Plant
-3️⃣ 💧 Irrigation
-4️⃣ 🐄 Animals
-5️⃣ 🔨 General Work
-6️⃣ ✅ All Work
+                1️⃣ 🌾 Harvest
+                2️⃣ 🌱 Plant
+                3️⃣ 💧 Irrigation
+                4️⃣ 🐄 Animals
+                5️⃣ 🔨 General Work
+                6️⃣ ✅ All Work
 
-➡️ Send: 1,2,3 or just 1"""
+                ➡️ Send: 1,2,3 or just 1"""
 
     def handle_work_type(self, from_number: str, work_types: str) -> str:
-        """Simplified work type preference"""
         work_type_map = {
             '1': 'Harvesting',
             '2': 'Planting',
@@ -142,9 +124,9 @@ class SimpleFarmConnectBot(FarmConnectBot):
         if not selected_types:
             return """❌ Wrong number
 
-➡️ Send: 1 to 6
+                    ➡️ Send: 1 to 6
 
-Example: 1,2,3"""
+                    Example: 1,2,3"""
 
         work_types_str = ', '.join(selected_types)
         self.store.update_user_profile(from_number, {'work_types': work_types_str})
@@ -152,15 +134,14 @@ Example: 1,2,3"""
         self.store.set_conversation_state(from_number, 'farmer_pref_location')
         return """🚗 How far can you go?
 
-1️⃣ 📍 10 miles
-2️⃣ 📍📍 25 miles
-3️⃣ 📍📍📍 50 miles
-4️⃣ 🌍 Any distance
+                1️⃣ 📍 10 miles
+                2️⃣ 📍📍 25 miles
+                3️⃣ 📍📍📍 50 miles
+                4️⃣ 🌍 Any distance
 
-➡️ Send: 1, 2, 3, or 4"""
+                ➡️ Send: 1, 2, 3, or 4"""
 
     def handle_pref_location(self, from_number: str, distance: str) -> str:
-        """Simplified distance preference"""
         distance_map = {
             '1': 10,
             '2': 25,
@@ -172,21 +153,20 @@ Example: 1,2,3"""
         if distance not in distance_map:
             return """❌ Wrong number
 
-➡️ Send: 1, 2, 3, or 4"""
+                    ➡️ Send: 1, 2, 3, or 4"""
 
         miles = distance_map[distance]
         self.store.update_user_profile(from_number, {'max_distance': miles})
         self.store.set_conversation_state(from_number, 'farmer_pref_hours')
         return """⏰ Work Schedule?
 
-1️⃣ 🕐🕐🕐 Full-time (40+ hrs)
-2️⃣ 🕐🕐 Part-time (20-40 hrs)
-3️⃣ ⚡ Flexible (Any)
+                1️⃣ 🕐🕐🕐 Full-time (40+ hrs)
+                2️⃣ 🕐🕐 Part-time (20-40 hrs)
+                3️⃣ ⚡ Flexible (Any)
 
-➡️ Send: 1, 2, or 3"""
+                ➡️ Send: 1, 2, or 3"""
 
     def handle_hours(self, from_number: str, choice: str) -> str:
-        """Simplified hours preference"""
         hours_map = {
             '1': 'full-time',
             '2': 'part-time',
@@ -199,21 +179,19 @@ Example: 1,2,3"""
         else:
             return """❌ Wrong number
 
-➡️ Send: 1, 2, or 3"""
+                    ➡️ Send: 1, 2, or 3"""
 
     def show_multiple_job_recommendations(self, from_number: str, matched_jobs: list) -> str:
-        """Simplified job list display"""
         count = len(matched_jobs)
 
         msg = f"""✅ Found {count} Job{"s" if count > 1 else ""}!
-💰 Best Pay First
+                💰 Best Pay First
 
-━━━━━━━━━━━━━
+                ━━━━━━━━━━━━━
 
-"""
+                """
 
         for i, job in enumerate(matched_jobs, 1):
-            # Format payment
             if job.get('payment_type') == 'per day':
                 pay = f"${job.get('payment_amount', 0)}/day"
             elif job.get('payment_type') == 'per hour':
@@ -224,17 +202,17 @@ Example: 1,2,3"""
                 pay = "Ask Owner"
 
             msg += f"""*{i}. {job.get('work_type', 'Work')}*
-🏡 {job.get('farm_name', 'Farm')}
-💰 {pay}
-📍 {job.get('location', 'N/A')}
-👥 {job.get('workers_needed', '?')} needed
+                    🏡 {job.get('farm_name', 'Farm')}
+                    💰 {pay}
+                    📍 {job.get('location', 'N/A')}
+                    👥 {job.get('workers_needed', '?')} needed
 
-"""
+                    """
 
         msg += """━━━━━━━━━━━━━
 
-➡️ Send number (1-""" + str(count) + """)
-Or send: menu"""
+                ➡️ Send number (1-""" + str(count) + """)
+                Or send: menu"""
 
         job_ids = [j['job_id'] for j in matched_jobs]
         self.store.set_conversation_state(from_number, 'selecting_from_recommendations', {
@@ -244,7 +222,6 @@ Or send: menu"""
         return msg
 
     def handle_job_selection_from_list(self, from_number: str, message: str, data: dict) -> str:
-        """Simplified job selection"""
         message = message.strip()
 
         if message.lower() == 'menu':
@@ -263,9 +240,8 @@ Or send: menu"""
                 if not job:
                     return """❌ Job not found
 
-➡️ Try again or send: menu"""
+                    ➡️ Try again or send: menu"""
 
-                # Format payment
                 if job.get('payment_type') == 'per day':
                     pay = f"${job.get('payment_amount', 0)}/day"
                 elif job.get('payment_type') == 'per hour':
@@ -276,35 +252,35 @@ Or send: menu"""
                     pay = "Ask Owner"
 
                 msg = f"""━━━━━━━━━━━━━
-📋 *Job Details*
-━━━━━━━━━━━━━
+                        📋 *Job Details*
+                        ━━━━━━━━━━━━━
 
-🏡 {job.get('farm_name', 'Farm')}
+                        🏡 {job.get('farm_name', 'Farm')}
 
-🛠 {job.get('work_type', 'Work')}
+                        🛠 {job.get('work_type', 'Work')}
 
-👥 {job.get('workers_needed', '?')} workers needed
+                        👥 {job.get('workers_needed', '?')} workers needed
 
-⏰ {job.get('work_hours', job.get('hours', 'Full day'))}
+                        ⏰ {job.get('work_hours', job.get('hours', 'Full day'))}
 
-💰 {pay}
+                        💰 {pay}
 
-📍 {job.get('location', 'N/A')}
+                        📍 {job.get('location', 'N/A')}
 
-🚗 {job.get('transportation', 'Not specified')}
+                        🚗 {job.get('transportation', 'Not specified')}
 
-📍 Meet: {job.get('meeting_point', 'See location')}
+                        📍 Meet: {job.get('meeting_point', 'See location')}
 
-ℹ️ {job.get('description', 'No details')}
+                        ℹ️ {job.get('description', 'No details')}
 
-━━━━━━━━━━━━━
+                        ━━━━━━━━━━━━━
 
-❓ Apply for this job?
+                        ❓ Apply for this job?
 
-1️⃣ ✅ Yes, Apply!
-2️⃣ ⬅️ Back to list
+                        1️⃣ ✅ Yes, Apply!
+                        2️⃣ ⬅️ Back to list
 
-➡️ Send: 1 or 2"""
+                        ➡️ Send: 1 or 2"""
 
                 self.store.set_conversation_state(from_number, 'job_details_view', {
                     'job_id': job_id,
@@ -315,17 +291,17 @@ Or send: menu"""
             else:
                 return f"""❌ Wrong number
 
-➡️ Send: 1 to {len(job_ids)}
-Or send: menu"""
+                        ➡️ Send: 1 to {len(job_ids)}
+                        Or send: menu"""
+            
         except ValueError:
             return f"""❌ Send a number
 
-➡️ Example: 1
+                    ➡️ Example: 1
 
-Or send: menu"""
+                    Or send: menu"""
 
     def handle_job_application(self, from_number: str, message: str, data: dict) -> str:
-        """Simplified application handling"""
         message = message.strip()
 
         if message.lower() == 'menu':
@@ -342,12 +318,11 @@ Or send: menu"""
             if not job:
                 return """❌ Job not found
 
-➡️ Send: menu"""
+                        ➡️ Send: menu"""
 
             match_id = self.store.create_match(job_id, from_number, 'accepted')
             user = self.store.get_user(from_number)
 
-            # Notify farm owner
             owner_phone = job.get('owner_phone')
             if owner_phone and self.twilio_client:
                 if job.get('payment_type') == 'per day':
@@ -363,17 +338,16 @@ Or send: menu"""
                     owner_phone,
                     f"""🎉 *New Application!*
 
-👤 {user['profile'].get('name', 'Worker')}
-🛠 {job.get('work_type', 'Work')}
-📍 {job.get('location', 'N/A')}
-💰 {pay}
+                    👤 {user['profile'].get('name', 'Worker')}
+                    🛠 {job.get('work_type', 'Work')}
+                    📍 {job.get('location', 'N/A')}
+                    💰 {pay}
 
-➡️ Send 3 to see applicants"""
+                    ➡️ Send 3 to see applicants"""
                 )
 
             self.store.clear_conversation_state(from_number)
 
-            # Format payment
             if job.get('payment_type') == 'per day':
                 pay = f"${job.get('payment_amount', 0)}/day"
             elif job.get('payment_type') == 'per hour':
@@ -385,64 +359,59 @@ Or send: menu"""
 
             return f"""✅ *Applied!*
 
-Owner will contact you soon!
+                    Owner will contact you soon!
 
-📋 Job:
-• {job.get('work_type', 'Work')}
-• {job.get('farm_name', 'Farm')}
-• {pay}
-• ID: {match_id}
+                    📋 Job:
+                    • {job.get('work_type', 'Work')}
+                    • {job.get('farm_name', 'Farm')}
+                    • {pay}
+                    • ID: {match_id}
 
-{self.show_farmer_menu(from_number)}"""
+                    {self.show_farmer_menu(from_number)}"""
 
         elif message == '2':
-            # Go back to job list
             matched_jobs = [self.store.get_job(jid) for jid in all_jobs if self.store.get_job(jid)]
             return self.show_multiple_job_recommendations(from_number, matched_jobs)
 
         else:
             return """❌ Wrong number
 
-1️⃣ Apply
-2️⃣ Back
+                    1️⃣ Apply
+                    2️⃣ Back
 
-➡️ Send: 1 or 2"""
+                    ➡️ Send: 1 or 2"""
 
     def start_owner_registration(self, from_number: str) -> str:
-        """Simplified owner registration"""
         self.store.set_conversation_state(from_number, 'owner_reg_name')
         return """✅ Welcome Farm Owner!
 
-📝 Step 1/3
+                📝 Step 1/3
 
-👤 Your Name?
+                👤 Your Name?
 
-➡️ Send your name"""
+                ➡️ Send your name"""
 
     def handle_owner_name(self, from_number: str, name: str) -> str:
-        """Simplified owner name handling"""
         self.store.update_user_profile(from_number, {'name': name})
         self.store.set_conversation_state(from_number, 'owner_reg_farm_name')
         return f"""👋 Hi {name}!
 
-📝 Step 2/3
+                📝 Step 2/3
 
-🚜 Farm Name?
+                🚜 Farm Name?
 
-➡️ Send farm name"""
+                ➡️ Send farm name"""
 
     def handle_farm_name(self, from_number: str, farm_name: str) -> str:
-        """Simplified farm name handling"""
         self.store.update_user_profile(from_number, {'farm_name': farm_name})
         self.store.set_conversation_state(from_number, 'owner_reg_location')
         return """📝 Step 3/3
 
-📍 Farm Location?
+                📍 Farm Location?
 
-➡️ Send city/area"""
+                ➡️ Send city/area"""
 
     def handle_owner_location(self, from_number: str, location: str) -> str:
-        """Simplified owner location handling"""
         self.store.update_user_profile(from_number, {'location': location})
         self.store.update_user(from_number, {'registered': True})
         self.store.clear_conversation_state(from_number)
@@ -450,7 +419,7 @@ Owner will contact you soon!
         user = self.store.get_user(from_number)
         return f"""✅ Registration Complete!
 
-🏡 Farm: {user['profile'].get('farm_name', 'Your Farm')}
-📍 {location}
+                🏡 Farm: {user['profile'].get('farm_name', 'Your Farm')}
+                📍 {location}
 
-{self.show_owner_menu(from_number)}"""
+                {self.show_owner_menu(from_number)}"""

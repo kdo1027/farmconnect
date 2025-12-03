@@ -1,7 +1,3 @@
-"""
-Flask webhook for FarmConnect - Simplified Version
-Handles incoming WhatsApp messages using the simplified low-literacy bot
-"""
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 from chatbot_simple import SimpleFarmConnectBot
@@ -16,7 +12,7 @@ def reply_whatsapp():
     message_body = request.values.get('Body', '')
     media_url = request.values.get('MediaUrl0', None)
 
-    # Get bot response using simplified bot
+    # Get bot response 
     bot_response = bot.handle_message(from_number, message_body, media_url)
 
     # Create Twilio response

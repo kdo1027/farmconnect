@@ -2,7 +2,7 @@
 
 A WhatsApp chatbot optimized for agricultural workers to find farm jobs easily using minimal text and maximum visual cues.
 
-## 🌟 Key Features
+## Key Features
 
 - **Multilingual Support** - English & Spanish (Español) with automatic detection
 - **Low-Literacy Optimized** - Minimal text, maximum emojis
@@ -11,7 +11,7 @@ A WhatsApp chatbot optimized for agricultural workers to find farm jobs easily u
 - **Smart Job Matching** - Matches workers with jobs by work type and salary
 - **Complete Registration** - Name, location, ID verification, and preferences
 
-## 🌍 Language Support
+## Language Support
 
 FarmConnect supports **English and Spanish** with:
 - ✅ **Automatic language detection** - Detects Spanish keywords (hola, trabajo, etc.)
@@ -26,7 +26,7 @@ FarmConnect supports **English and Spanish** with:
 | **reply_whatsapp_simple.py** | 3001 | English only | For reference only |
 | **reply_whatsapp_multilingual.py** | 3001 | English & Spanish | Main bot (recommended) |
 
-## 💡 Design Philosophy
+## Design Philosophy
 
 This chatbot is designed specifically for users with limited literacy skills:
 - **Minimal text** - Short, simple sentences
@@ -138,7 +138,7 @@ Copy the ngrok HTTPS URL (e.g., `https://abc123.ngrok.io`)
 
 1. Go to https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn
 2. In the "Sandbox Configuration" section
-3. Set "When a message comes in" to: `https://YOUR_NGROK_URL/reply_whatsapp_simple`
+3. Set "When a message comes in" to: `https://YOUR_NGROK_URL/reply_whatsapp_multilingual`
 4. Save
 
 ## 📋 User Flow (Simplified)

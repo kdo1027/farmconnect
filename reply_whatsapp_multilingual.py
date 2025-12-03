@@ -1,7 +1,3 @@
-"""
-Flask webhook for FarmConnect - Multilingual Version
-Handles incoming WhatsApp messages in English and Spanish
-"""
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 from chatbot_multilingual import MultilingualFarmConnectBot
@@ -11,12 +7,11 @@ bot = MultilingualFarmConnectBot()
 
 @app.route("/reply_whatsapp_multilingual", methods=['POST'])
 def reply_whatsapp():
-    """Respond to incoming WhatsApp messages with language support"""
     from_number = request.values.get('From', '')
     message_body = request.values.get('Body', '')
     media_url = request.values.get('MediaUrl0', None)
 
-    # Get bot response with automatic language detection/support
+    # Get bot response 
     bot_response = bot.handle_message(from_number, message_body, media_url)
 
     # Create Twilio response

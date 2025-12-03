@@ -1,33 +1,19 @@
-"""
-Multilingual FarmConnect Chatbot
-Supports English and Spanish
-"""
 from chatbot import FarmConnectBot
 from translations import get_text, detect_language
 from typing import Optional
 
 
 class MultilingualFarmConnectBot(FarmConnectBot):
-    """
-    FarmConnect bot with multilingual support (English/Spanish)
-    """
-
     def get_user_language(self, from_number: str) -> str:
-        """Get user's preferred language"""
         user = self.store.get_user(from_number)
         if user and 'language' in user.get('profile', {}):
             return user['profile']['language']
-        return 'en'  # Default to English
+        return 'en'  
 
     def set_user_language(self, from_number: str, language: str):
-        """Set user's preferred language"""
         self.store.update_user_profile(from_number, {'language': language})
 
     def handle_message(self, from_number: str, message_body: str, media_url: Optional[str] = None) -> str:
-        """
-        Main message handler with language detection
-        """
-        # Check for language switch commands
         if message_body.lower() in ['español', 'spanish', 'es']:
             self.set_user_language(from_number, 'es')
             return "✅ Idioma cambiado a Español\n\n" + self.handle_message_multilingual(from_number, message_body, media_url)
@@ -38,32 +24,25 @@ class MultilingualFarmConnectBot(FarmConnectBot):
         return self.handle_message_multilingual(from_number, message_body, media_url)
 
     def handle_message_multilingual(self, from_number: str, message_body: str, media_url: Optional[str] = None) -> str:
-        """Handle message with current language setting"""
         user = self.store.get_user(from_number)
         conv_state = self.store.get_conversation_state(from_number)
 
-        # For new users, detect language from first message
         if not user:
             detected_lang = detect_language(message_body)
-            # Create user and set language
             lang = detected_lang
         else:
             lang = self.get_user_language(from_number)
 
-        # Store language for use in other methods
         self.current_lang = lang
 
-        # Handle conversation states
         if conv_state:
             return self.handle_state(from_number, conv_state, message_body, media_url)
 
-        # New user - show welcome menu
         if not user:
             self.store.create_user(from_number, 'unknown')  # Will set type later
             self.set_user_language(from_number, lang)
             return self.show_welcome_menu(from_number)
-
-        # Registered user without conversation state
+        
         if user.get('registered'):
             if message_body.lower() in ['menu', 'menú', 'inicio']:
                 return self.show_main_menu(from_number, user)
@@ -72,32 +51,27 @@ class MultilingualFarmConnectBot(FarmConnectBot):
             else:
                 return self.handle_menu_selection(from_number, user, message_body)
 
-        # User exists but not registered
         return self.show_welcome_menu(from_number)
 
     def show_welcome_menu(self, from_number: str) -> str:
-        """Show welcome menu in user's language"""
         lang = self.get_user_language(from_number)
         msg = get_text('welcome', lang)
         self.store.set_conversation_state(from_number, 'awaiting_role_selection')
         return msg
 
     def show_farmer_menu(self, from_number: str) -> str:
-        """Show farmer menu in user's language"""
         lang = self.get_user_language(from_number)
         msg = get_text('farmer_menu', lang)
         self.store.clear_conversation_state(from_number)
         return msg
 
     def show_owner_menu(self, from_number: str) -> str:
-        """Show owner menu in user's language"""
         lang = self.get_user_language(from_number)
         msg = get_text('owner_menu', lang)
         self.store.clear_conversation_state(from_number)
         return msg
 
     def show_help(self, from_number: str = None) -> str:
-        """Show help in user's language"""
         if from_number:
             lang = self.get_user_language(from_number)
         else:
@@ -105,30 +79,25 @@ class MultilingualFarmConnectBot(FarmConnectBot):
         return get_text('help', lang)
 
     def start_farmer_registration(self, from_number: str) -> str:
-        """Start farmer registration in user's language"""
         lang = self.get_user_language(from_number)
         self.store.set_conversation_state(from_number, 'farmer_reg_name')
         return get_text('farmer_welcome', lang)
 
     def handle_farmer_name(self, from_number: str, name: str) -> str:
-        """Handle farmer name input"""
         lang = self.get_user_language(from_number)
         self.store.update_user_profile(from_number, {'name': name})
         self.store.set_conversation_state(from_number, 'farmer_reg_location')
 
-        # Nice to meet you message
         greeting = f"Nice to meet you, {name}! 👋" if lang == 'en' else f"¡Mucho gusto, {name}! 👋"
         return greeting + "\n\n" + get_text('farmer_location_prompt', lang)
 
     def handle_farmer_location(self, from_number: str, location: str) -> str:
-        """Handle farmer location input"""
         lang = self.get_user_language(from_number)
         self.store.update_user_profile(from_number, {'location': location})
         self.store.set_conversation_state(from_number, 'farmer_reg_id')
         return get_text('farmer_id_prompt', lang)
 
     def handle_farmer_id(self, from_number: str, media_url: Optional[str]) -> str:
-        """Handle farmer ID upload"""
         lang = self.get_user_language(from_number)
 
         if not media_url:
@@ -141,7 +110,6 @@ class MultilingualFarmConnectBot(FarmConnectBot):
         return get_text('farmer_id_received', lang)
 
     def handle_work_type(self, from_number: str, work_types: str) -> str:
-        """Handle work type preference with translation"""
         lang = self.get_user_language(from_number)
 
         work_type_map = {
@@ -171,7 +139,6 @@ class MultilingualFarmConnectBot(FarmConnectBot):
         return get_text('distance_prompt', lang)
 
     def handle_pref_location(self, from_number: str, distance: str) -> str:
-        """Handle location preference"""
         lang = self.get_user_language(from_number)
 
         distance_map = {
@@ -194,7 +161,6 @@ class MultilingualFarmConnectBot(FarmConnectBot):
         return get_text('hours_prompt', lang)
 
     def handle_hours(self, from_number: str, choice: str) -> str:
-        """Handle hours preference"""
         lang = self.get_user_language(from_number)
 
         hours_map = {
@@ -212,7 +178,6 @@ class MultilingualFarmConnectBot(FarmConnectBot):
             return error_msg
 
     def show_job_recommendations(self, from_number: str) -> str:
-        """Show job recommendations in user's language"""
         lang = self.get_user_language(from_number)
         user = self.store.get_user(from_number)
         prefs = user.get('profile', {})
@@ -226,7 +191,6 @@ class MultilingualFarmConnectBot(FarmConnectBot):
         return self.show_multiple_job_recommendations(from_number, matched_jobs)
 
     def show_multiple_job_recommendations(self, from_number: str, matched_jobs: list) -> str:
-        """Display job recommendations in user's language"""
         lang = self.get_user_language(from_number)
         count = len(matched_jobs)
 
@@ -247,13 +211,13 @@ class MultilingualFarmConnectBot(FarmConnectBot):
             workers_text = get_text('workers_needed', lang)
 
             msg += f"""*{i}. {job.get('work_type', 'Farm Work')}*
-🏡 {job.get('farm_name', 'Farm')}
-💰 {pay_display}
-📍 {job.get('location', 'N/A')}
-⏰ {job.get('hours', job.get('work_hours', 'Full day'))}
-👥 {job.get('workers_needed', 'N/A')} {workers_text}
+                    🏡 {job.get('farm_name', 'Farm')}
+                    💰 {pay_display}
+                    📍 {job.get('location', 'N/A')}
+                    ⏰ {job.get('hours', job.get('work_hours', 'Full day'))}
+                    👥 {job.get('workers_needed', 'N/A')} {workers_text}
 
-"""
+                    """
 
         msg += "━━━━━━━━━━━━━━━━━━━━\n\n"
         msg += get_text('select_job', lang, max=count)
