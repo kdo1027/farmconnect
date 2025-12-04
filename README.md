@@ -23,8 +23,9 @@ FarmConnect supports **English and Spanish** with:
 
 | Bot | Port | Language | Use Case |
 |-----|------|----------|----------|
-| **reply_whatsapp_simple.py** | 3001 | English only | For reference only |
-| **reply_whatsapp_multilingual.py** | 3001 | English & Spanish | Main bot (recommended) |
+| **chatbot.py** | 3000 | English only | Text-heavy version |
+| **reply_whatsapp_simple.py** | 3001 | English only | Simplified version with minimal text and emojis |
+| **reply_whatsapp_multilingual.py** | 3001 | English & Spanish | Simplified version supporting Spanish & English |
 
 ## Design Philosophy
 
@@ -424,6 +425,19 @@ Same as main bot - uses JSON files in `data/` directory:
 - **Framework**: Flask
 - **WhatsApp Integration**: Twilio API
 - **Storage**: JSON files
+
+## AI Usage
+
+This project was developed with AI assistance for documentation research and code generation:
+
+- **ChatGPT (70% of AI usage)**: Used for general development, code implementation, and referencing Twilio & Flask documentation
+- **Claude Code (30% of AI usage)**: Primarily used for bug detection, unit test generation, and implementing multilingual chatbot version (supporting Spanish)
+
+**Documentation References:**
+- Twilio API documentation for WhatsApp integration
+- Flask framework documentation for webhook implementation
+
+**Logs:** GPT conversation logs are available in the `appendix` folder for transparency and reference.
 
 ## Special Commands
 
