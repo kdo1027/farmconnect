@@ -114,11 +114,25 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 ### 4. Run the Bot
 
+Choose one of the following bots:
+
 **Multilingual Bot (English & Spanish)** ⭐ Recommended
 ```bash
 python reply_whatsapp_multilingual.py
 ```
 Runs on **http://localhost:3001**
+
+**Simplified Bot (English only)**
+```bash
+python reply_whatsapp_simple.py
+```
+Runs on **http://localhost:3001**
+
+**Text-Heavy Bot (English only)**
+```bash
+python chatbot.py
+```
+Runs on **http://localhost:3000**
 
 ### Language Commands (Multilingual Bot)
 - Type `español` to switch to Spanish
@@ -127,10 +141,16 @@ Runs on **http://localhost:3001**
 
 ### 5. Expose Webhook with ngrok
 
-In a new terminal:
+In a new terminal, expose the port matching your chosen bot:
 
+**For Multilingual or Simplified Bot:**
 ```bash
 ngrok http 3001
+```
+
+**For Text-Heavy Bot:**
+```bash
+ngrok http 3000
 ```
 
 Copy the ngrok HTTPS URL (e.g., `https://abc123.ngrok.io`)
@@ -139,7 +159,10 @@ Copy the ngrok HTTPS URL (e.g., `https://abc123.ngrok.io`)
 
 1. Go to https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn
 2. In the "Sandbox Configuration" section
-3. Set "When a message comes in" to: `https://YOUR_NGROK_URL/reply_whatsapp_multilingual`
+3. Set "When a message comes in" to the appropriate endpoint:
+   - **Multilingual Bot**: `https://YOUR_NGROK_URL/reply_whatsapp_multilingual`
+   - **Simplified Bot**: `https://YOUR_NGROK_URL/reply_whatsapp_simple`
+   - **Text-Heavy Bot**: `https://YOUR_NGROK_URL/reply`
 4. Save
 
 ## 📋 User Flow (Simplified)
