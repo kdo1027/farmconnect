@@ -460,7 +460,7 @@ This project was developed with AI assistance for documentation research and cod
 - Twilio API documentation for WhatsApp integration
 - Flask framework documentation for webhook implementation
 
-**Logs:** GPT conversation logs are available in the `appendix` folder for transparency and reference.
+**Logs:** GPT conversation logs are available in the `appendix` folder for transparency and reference. Based on the official Claude Code documentation, there is currently no built-in feature to export chat history logs directly from Claude Code. 
 
 ## Special Commands
 
