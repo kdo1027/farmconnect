@@ -14,10 +14,10 @@ A WhatsApp chatbot optimized for agricultural workers to find farm jobs easily u
 ## Language Support
 
 FarmConnect supports **English and Spanish** with:
-- ✅ **Automatic language detection** - Detects Spanish keywords (hola, trabajo, etc.)
-- ✅ **Manual language switching** - Type `español` or `english` to switch anytime
-- ✅ **Persistent preferences** - Language choice is saved per user
-- ✅ **Professional translations** - All UI text manually translated by native speakers
+- **Automatic language detection** - Detects Spanish keywords (hola, trabajo, etc.)
+- **Manual language switching** - Type `español` or `english` to switch anytime
+- **Persistent preferences** - Language choice is saved per user
+- **Professional translations** - All UI text manually translated by native speakers
 
 ### Available Bots
 
